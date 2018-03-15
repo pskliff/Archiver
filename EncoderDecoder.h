@@ -1,16 +1,10 @@
-#include <iostream>
-#include <map>
-#include <string>
-#include <zconf.h>
-#include <stdexcept>
-#include <fstream>
 #include <locale>
 #include <codecvt>
 #include "huffman.h"
+#include "fano.h"
 
 
-
-namespace huffEncDec
+namespace EncDec
 {
 
 

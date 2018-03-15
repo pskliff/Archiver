@@ -24,9 +24,6 @@ class Huffman
 
         int frequency;
 
-        // save index to keep codes in the right order
-//        int index;
-
         // Left and right child
         Node* left, * right;
 
@@ -35,7 +32,6 @@ class Huffman
         {
             left = right = nullptr;
             this->frequency = freq;
-//            this->index = index;
             this->ch = ch;
         }
     };
@@ -47,13 +43,7 @@ class Huffman
     public:
         bool operator()(Node* l, Node* r)
         {
-            return
-//                    l->frequency == r->frequency
-//                   ? l->index >= 0 && r->index >= 0
-//                     ? l->index < r->index
-//                     : l->index > r->index
-//                   :
-                   l->frequency > r->frequency;
+            return l->frequency > r->frequency;
         }
     };
 
@@ -77,13 +67,7 @@ public:
 
     void build()
     {
-        ind = 0;
         int n = queue.size();
-//        codes = new string[n];
-//        for (int i = 0; i < n; ++i)
-//        {
-//            codes[]
-//        }
 
         Node* left, * right, * parent;
 
@@ -130,9 +114,6 @@ public:
 
     // size of the array
     int n;
-
-    // variable that helps setting indexes
-    int ind = 0;
 
     // keeps final codes
     map <uchar, string> codes;
@@ -345,7 +326,7 @@ public:
 //    huff->build();
 //
 ////    fileName.erase(fileName.length()-4, 4);
-//    huffEncDec::encode_file(fileName, fileName+"haff.txt",  huff->codes); // encoding map and file content
+//    EncDec::encode_file(fileName, fileName+"haff.txt",  huff->codes); // encoding map and file content
 //}
 //
 //
@@ -358,7 +339,7 @@ public:
 ////        std::cout << f.first << " " << f.second << std::endl;
 ////    }
 //    create_huffman_codes("samples/01");
-//    huffEncDec::decode_file("samples/01haff.txt", "samples/01res");
+//    EncDec::decode_file("samples/01haff.txt", "samples/01res");
 //
 //    return 0;
 //}
