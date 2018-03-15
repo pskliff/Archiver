@@ -23,6 +23,7 @@ public:
 
 Node find_biggest_match(vector<uchar>& s, int current_position, int window_size, int lookahead_size)
 {
+//    std::cout << "************ Entered  find_biggest_match   ****************\n";
     // end position of the buffer
     int buffer_end = min(current_position + lookahead_size, (int)s.size());
     int best_offset = 0;
@@ -62,17 +63,18 @@ Node find_biggest_match(vector<uchar>& s, int current_position, int window_size,
 
         }
     }
+
+//    std::cout << "************ Entered  find_biggest_match   ****************\n";
     return Node(best_offset, maxLen, s[current_position + maxLen]);
 }
 
 
-
-// s — исходная строка
-// res - вектор троек (offs, len, ch)
-// histBufMax, prevBufMax - Макс длины буферов истории и предпросмотра
-// функция возвращает список блоков
+/**
+ * encodes array of chars via lz77 algorithm
+ */
 void encode_LZ77(vector<uchar>& s, vector<Node>& res, int histBufMax, int prevBufMax)
 {
+    std::cout << "************ Entered  encode_LZ77   ****************\n";
     // first element will always have a 0 length and 0 offset
     int i = 1;
     res.emplace_back(Node(0, 0, s[0]));
@@ -85,5 +87,9 @@ void encode_LZ77(vector<uchar>& s, vector<Node>& res, int histBufMax, int prevBu
 
         // skip elements that are already seen
         i += match.len + 1;
+        if(i % 100000 == 0)
+            cout << i << endl;
     }
+
+    std::cout << "************ Exit  encode_LZ77   ****************\n";
 }

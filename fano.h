@@ -9,10 +9,15 @@
 typedef unsigned char uchar;
 using namespace std;
 
-
+/**
+ * creates codes for bytes with ShannonFano algorithm
+ */
 class ShannonFano
 {
 
+    /**
+     * Node to keep char and its frequency
+     */
     class Node
     {
         friend class ShannonFano;
@@ -56,6 +61,9 @@ public:
 
 
 
+    /**
+     * creates final codes as map
+     */
     void make_final_codes()
     {
         for (int i = 0; i < n; ++i)
@@ -63,6 +71,11 @@ public:
     }
 
 
+    /**
+     * adds new node
+     * \param ch byte
+     * \param chance frequency
+     */
     void addChance(uchar ch, int chance)
     {
         nodes[ind] = *(new Node(ch, chance, ind));
@@ -76,8 +89,12 @@ public:
     }
 
 
+    /**
+     * encodes added bytes
+     */
     void encode(int l, int r)
     {
+        std::cout << "************ Entered  encode ShannonFano  ****************\n";
         int i, split_ind;
         int in_sum;
         int full;
@@ -120,10 +137,15 @@ public:
         }
 
         make_final_codes();
+
+        std::cout << "************ Exit  encode ShannonFano  ****************\n";
     }
 
 
 
+    /**
+     * builds codes for given bytes
+     */
     void build()
     {
         encode(0, n - 1);
