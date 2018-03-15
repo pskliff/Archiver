@@ -287,13 +287,13 @@ public:
 //*
 //* @throws runtime_error if file does not exist
 //*/
-//std::map<wchar_t, int> GetFrequencyMap(std::string fileName)
+//std::map<wchar_t, int> get_frequency(std::string fileName)
 //{
 //
 //    // check file existence
 //    if (access(fileName.c_str(), F_OK) == -1)
 //    {
-//        throw std::runtime_error("File does not exist (from GetFrequencyMap())");
+//        throw std::runtime_error("File does not exist (from get_frequency())");
 //    }
 //    std::wifstream f(fileName, std::ios::binary);
 //    f.imbue(std::locale(""));
@@ -324,10 +324,10 @@ public:
 //* @throws throw logic_error if file is empty
 //*
 //*/
-//void ArchiveHuffman(std::string fileName)
+//void create_huffman_codes(std::string fileName)
 //{
 ////    if (fileName.length() <= 4 || fileName.substr(fileName.length()-4, 4) != ".txt") throw invalid_argument("Invalid filename");
-//    auto frequencyMap = GetFrequencyMap(fileName);
+//    auto frequencyMap = get_frequency(fileName);
 ////    map <wchar_t, string> codes;
 ////    std::priority_queue<pair<int, std::vector<wchar_t>>, vector<pair<int, std::vector<wchar_t>>>, CompareInts> queue;
 //
@@ -345,7 +345,7 @@ public:
 //    huff->build();
 //
 ////    fileName.erase(fileName.length()-4, 4);
-//    huffEncDec::EncodeMapToFile(fileName, fileName+"haff.txt",  huff->codes); // encoding map and file content
+//    huffEncDec::encode_file(fileName, fileName+"haff.txt",  huff->codes); // encoding map and file content
 //}
 //
 //
@@ -357,8 +357,8 @@ public:
 ////    {
 ////        std::cout << f.first << " " << f.second << std::endl;
 ////    }
-//    ArchiveHuffman("samples/01");
-//    huffEncDec::DecodeFile("samples/01haff.txt", "samples/01res");
+//    create_huffman_codes("samples/01");
+//    huffEncDec::decode_file("samples/01haff.txt", "samples/01res");
 //
 //    return 0;
 //}
