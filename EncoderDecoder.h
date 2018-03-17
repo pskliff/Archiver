@@ -159,7 +159,7 @@ namespace EncDec
 *
 * @throws runtime_error, if source file doesn't exist
 */
-    static void encode_file(std::string source_path, std::string destination_path, std::map<uchar, string> codes)
+    static double encode_file(std::string source_path, std::string destination_path, std::map<uchar, string> codes)
     {
         std::cout << "************ Enter    encode_file   ****************\n";
         if (access(source_path.c_str(), 0) != 0)
@@ -167,6 +167,7 @@ namespace EncDec
 
         std::ofstream file(destination_path, ios::out);
 
+        int file_size = 0;
         file.put(codes.size());
 
         // encoding map
@@ -183,6 +184,7 @@ namespace EncDec
         string proxy = "";
         std::ifstream in(source_path, std::ios::in | std::ios::binary);
 
+
         // collects encoded bytes
         vector<uchar> encoded_bytes;
         char ch_buf;
@@ -190,6 +192,7 @@ namespace EncDec
         {
             uchar ch = ch_buf;
             proxy += codes[ch];
+            ++file_size;
 
             // while in proxy there is > 1 byte
             while (proxy.length() > 8)
@@ -202,6 +205,8 @@ namespace EncDec
                 proxy.erase(0, 8);
             }
         }
+
+
 
         // number of bits left in buffer
         const int len = proxy.length();
@@ -226,8 +231,11 @@ namespace EncDec
 
         encoded_bytes.clear();
         file.close();
+
         in.close();
         std::cout << "************ Exit    encode_file   ****************\n";
+
+        return file_size;
     }
 
 
@@ -247,10 +255,12 @@ namespace EncDec
 * @throws logic_error, if compressed file format is incorrect
 *
 */
-    void decode_file(string source_path, string destination_path)
+    double decode_file(string source_path, string destination_path)
     {
         std::cout << "************ Enter    decode_file   ****************\n";
         ifstream in(source_path, std::ios::in);
+        int file_size = 0;
+
         map<string, uchar, string_len_comparator> byte_map;
         if (in.eof())
             throw logic_error("Decoding file is empty");
@@ -270,10 +280,12 @@ namespace EncDec
         while (in.get(value_buf) && ctr < ml)
         {
             value = value_buf;
+            ++file_size;
             string key = "";
             char ch_buf;
             while (in.get(ch_buf))
             {
+                ++file_size;
                 uchar ch = ch_buf;
                 if (ch == '\n')
                 {
@@ -303,6 +315,7 @@ namespace EncDec
         while (in.get(buf))
         {
             uchar ch = buf;
+            ++file_size;
 
             source_content += to_string(ch);
         }
@@ -333,6 +346,8 @@ namespace EncDec
         }
         file.close();
         std::cout << "************ Exit    decode_file   ****************\n";
+
+        return file_size;
     }
 
 }
