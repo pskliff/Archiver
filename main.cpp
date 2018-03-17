@@ -12,7 +12,8 @@
 #include <fstream>
 #include <locale>
 #include <codecvt>
-#include "EncoderDecoder.h"
+//#include "EncoderDecoder.h"
+#include "Utility.h"
 
 
 
@@ -169,8 +170,14 @@ int main()
 //    EncDec::decode_file(source_path + FANO_ENCODING_EXTENCION, source_path + FANO_DECODING_EXTENCION);
 
 
-    std::vector<Node> lz77_codes = create_lz77_codes(source_path, HIST_BUF_MAX_16, PREV_BUF_MAX_4);
-    EncDec::write_lz77(lz77_codes, source_path + LZ7720_ENCODING_EXTENCION);
-    EncDec::decode_lz77(source_path + LZ7720_ENCODING_EXTENCION, source_path + LZ7720_DECODING_EXTENCION);
+//    std::vector<Node> lz77_codes = create_lz77_codes(source_path, HIST_BUF_MAX_16, PREV_BUF_MAX_4);
+//    EncDec::write_lz77(lz77_codes, source_path + LZ7720_ENCODING_EXTENCION);
+//    EncDec::decode_lz77(source_path + LZ7720_ENCODING_EXTENCION, source_path + LZ7720_DECODING_EXTENCION);
+
+
+    Utility ut;
+    ut.write_frequency_to_csv("freqs.csv");
+
+
     return 0;
 }
