@@ -1,1 +1,5 @@
 **/cmake-build-debug/
+*.out
+**/unedees@52.151.38.76
+**/CMakeLists.txt
+**/.ipynb_checkpoints

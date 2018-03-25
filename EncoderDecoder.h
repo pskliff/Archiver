@@ -65,10 +65,10 @@ namespace EncDec
 
             // add offset symbol len times
             for (int j = 0; j < node.len; ++j)
-                res.emplace_back(res[ind + j]);
+                res.push_back(res[ind + j]);
 
             // add next symbol
-            res.emplace_back(node.ch);
+            res.push_back(node.ch);
 
         }
 
@@ -80,19 +80,21 @@ namespace EncDec
     /**
      * decodes lz77 from compressed file and writes to the uncompressed
      */
-    void decode_lz77(std::string source_path, std::string destination_path)
+    double decode_lz77(std::string source_path, std::string destination_path)
     {
         std::cout << "************ Entered  decode_lz77   ****************\n";
-        if (access(source_path.c_str(), F_OK) == -1)
-            throw std::runtime_error("File does't exist (decode_lz77)");
+//        if (access(source_path.c_str(), F_OK) == -1)
+//            throw std::runtime_error("File does't exist (decode_lz77)");
 
 
         std::ifstream in(source_path, std::ios::in | std::ios::binary);
         int div = 0, mod = 0, n = 0, offset, len;
 
 
+
         in.read(reinterpret_cast<char *>(&n), sizeof(n));
 
+        int file_size = sizeof(n);
         std::cout << "************ read n  write_lz77   ****************\n";
         uchar ch;
         vector<Node> nodes;
@@ -108,7 +110,8 @@ namespace EncDec
 
             ch = in.get();
 
-            nodes.emplace_back(Node(offset, len, ch));
+            file_size += 5;
+            nodes.push_back(Node(offset, len, ch));
         }
         in.close();
 
@@ -123,6 +126,7 @@ namespace EncDec
 
         fout.close();
         std::cout << "\n************ Exit decode_lz77   ****************\n";
+        return file_size;
     }
 
 
@@ -159,14 +163,15 @@ namespace EncDec
 *
 * @throws runtime_error, if source file doesn't exist
 */
-    static void encode_file(std::string source_path, std::string destination_path, std::map<uchar, string> codes)
+    static double encode_file(std::string source_path, std::string destination_path, std::map<uchar, string> codes)
     {
         std::cout << "************ Enter    encode_file   ****************\n";
-        if (access(source_path.c_str(), 0) != 0)
-            throw runtime_error("File does not exist (encode_file)");
+//        if (access(source_path.c_str(), 0) != 0)
+//            throw runtime_error("File does not exist (encode_file)");
 
         std::ofstream file(destination_path, ios::out);
 
+        int file_size = 0;
         file.put(codes.size());
 
         // encoding map
@@ -183,6 +188,7 @@ namespace EncDec
         string proxy = "";
         std::ifstream in(source_path, std::ios::in | std::ios::binary);
 
+
         // collects encoded bytes
         vector<uchar> encoded_bytes;
         char ch_buf;
@@ -190,6 +196,7 @@ namespace EncDec
         {
             uchar ch = ch_buf;
             proxy += codes[ch];
+            ++file_size;
 
             // while in proxy there is > 1 byte
             while (proxy.length() > 8)
@@ -202,6 +209,8 @@ namespace EncDec
                 proxy.erase(0, 8);
             }
         }
+
+
 
         // number of bits left in buffer
         const int len = proxy.length();
@@ -226,8 +235,11 @@ namespace EncDec
 
         encoded_bytes.clear();
         file.close();
+
         in.close();
         std::cout << "************ Exit    encode_file   ****************\n";
+
+        return file_size;
     }
 
 
@@ -247,10 +259,12 @@ namespace EncDec
 * @throws logic_error, if compressed file format is incorrect
 *
 */
-    void decode_file(string source_path, string destination_path)
+    double decode_file(string source_path, string destination_path)
     {
         std::cout << "************ Enter    decode_file   ****************\n";
         ifstream in(source_path, std::ios::in);
+        int file_size = 0;
+
         map<string, uchar, string_len_comparator> byte_map;
         if (in.eof())
             throw logic_error("Decoding file is empty");
@@ -270,10 +284,12 @@ namespace EncDec
         while (in.get(value_buf) && ctr < ml)
         {
             value = value_buf;
+            ++file_size;
             string key = "";
             char ch_buf;
             while (in.get(ch_buf))
             {
+                ++file_size;
                 uchar ch = ch_buf;
                 if (ch == '\n')
                 {
@@ -303,6 +319,7 @@ namespace EncDec
         while (in.get(buf))
         {
             uchar ch = buf;
+            ++file_size;
 
             source_content += to_string(ch);
         }
@@ -333,6 +350,8 @@ namespace EncDec
         }
         file.close();
         std::cout << "************ Exit    decode_file   ****************\n";
+
+        return file_size;
     }
 
 }
