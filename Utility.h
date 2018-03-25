@@ -5,6 +5,7 @@
 #include "EncoderDecoder.h"
 #include <cmath>
 #include <chrono>
+#include <algorithm>
 
 typedef long long long64;
 
@@ -30,7 +31,9 @@ const int HIST_BUF_MAX_16 = 1024 * 16;
 const int PREV_BUF_MAX_4 = 1024 * 4;
 const string HUFF_TYPE ="huff";
 const string FANO_TYPE ="fano";
-const string LZ77_TYPE ="lz77";
+const string LZ775_TYPE ="lz775";
+const string LZ7710_TYPE ="lz7710";
+const string LZ7720_TYPE ="lz7720";
 
 
 class Utility
@@ -95,8 +98,8 @@ public:
     std::map<uchar, int> get_frequency(std::string path)
     {
         std::cout << "************ Entered  get_frequency   ****************\n";
-        if (access(path.c_str(), F_OK) == -1)
-            throw std::runtime_error("File does't exist (get_frequency())");
+//        if (access(path.c_str(), F_OK) == -1)
+//            throw std::runtime_error("File does't exist (get_frequency())");
 
 
         std::ifstream f(path, std::ios::in | std::ios::binary);
@@ -178,12 +181,12 @@ public:
 /**
  * Uses lz77 algorithm to archive file to array of nodes
  */
-    std::vector<Node> create_lz77_codes(std::string path, int histBufMax, int prevBufMax)
+    std::vector<Node> create_lz77_codes(std::string path, int histBufMax, int prevBufMax, double& bytes_num)
     {
         std::cout << "************ Entered  create_lz77_codes   **************** " << histBufMax << " " << prevBufMax
                   << "\n";
-        if (access(path.c_str(), F_OK) == -1)
-            throw std::runtime_error("File does't exist (create lz77)");
+//        if (access(path.c_str(), F_OK) == -1)
+//            throw std::runtime_error("File does't exist (create lz77)");
 
 
         std::ifstream f(path, std::ios::in | std::ios::binary);
@@ -195,9 +198,11 @@ public:
             uchar ch = ch_buf;
 
             // increment frequency for current char
-            bytes.emplace_back(ch);
+            bytes.push_back(ch);
         }
         f.close();
+
+        bytes_num = bytes.size();
 
         encode_LZ77(bytes, result, histBufMax, prevBufMax);
 

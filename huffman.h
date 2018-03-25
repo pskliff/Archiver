@@ -5,7 +5,7 @@
 #include <queue>
 #include <map>
 #include <string>
-#include <zconf.h>
+//#include <zconf.h>
 #include <stdexcept>
 #include <locale>
 

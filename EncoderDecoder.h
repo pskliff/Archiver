@@ -65,10 +65,10 @@ namespace EncDec
 
             // add offset symbol len times
             for (int j = 0; j < node.len; ++j)
-                res.emplace_back(res[ind + j]);
+                res.push_back(res[ind + j]);
 
             // add next symbol
-            res.emplace_back(node.ch);
+            res.push_back(node.ch);
 
         }
 
@@ -80,19 +80,21 @@ namespace EncDec
     /**
      * decodes lz77 from compressed file and writes to the uncompressed
      */
-    void decode_lz77(std::string source_path, std::string destination_path)
+    double decode_lz77(std::string source_path, std::string destination_path)
     {
         std::cout << "************ Entered  decode_lz77   ****************\n";
-        if (access(source_path.c_str(), F_OK) == -1)
-            throw std::runtime_error("File does't exist (decode_lz77)");
+//        if (access(source_path.c_str(), F_OK) == -1)
+//            throw std::runtime_error("File does't exist (decode_lz77)");
 
 
         std::ifstream in(source_path, std::ios::in | std::ios::binary);
         int div = 0, mod = 0, n = 0, offset, len;
 
 
+
         in.read(reinterpret_cast<char *>(&n), sizeof(n));
 
+        int file_size = sizeof(n);
         std::cout << "************ read n  write_lz77   ****************\n";
         uchar ch;
         vector<Node> nodes;
@@ -108,7 +110,8 @@ namespace EncDec
 
             ch = in.get();
 
-            nodes.emplace_back(Node(offset, len, ch));
+            file_size += 5;
+            nodes.push_back(Node(offset, len, ch));
         }
         in.close();
 
@@ -123,6 +126,7 @@ namespace EncDec
 
         fout.close();
         std::cout << "\n************ Exit decode_lz77   ****************\n";
+        return file_size;
     }
 
 
@@ -162,8 +166,8 @@ namespace EncDec
     static double encode_file(std::string source_path, std::string destination_path, std::map<uchar, string> codes)
     {
         std::cout << "************ Enter    encode_file   ****************\n";
-        if (access(source_path.c_str(), 0) != 0)
-            throw runtime_error("File does not exist (encode_file)");
+//        if (access(source_path.c_str(), 0) != 0)
+//            throw runtime_error("File does not exist (encode_file)");
 
         std::ofstream file(destination_path, ios::out);
 

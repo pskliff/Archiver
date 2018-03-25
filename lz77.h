@@ -87,7 +87,8 @@ void encode_LZ77(vector<uchar>& s, vector<Node>& res, int histBufMax, int prevBu
 
         // skip elements that are already seen
         i += match.len + 1;
-        if(i % 100000 == 0)
+
+        if (i % 100000 == 0)
             cout << i << endl;
     }
 
